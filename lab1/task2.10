@@ -1,0 +1,2 @@
+#!/bin/bash
+man bash | grep -E -o '\b\w{4,}\b' | sort | uniq -c | sort -nr | head --lines=3 | awk '{print $2}'

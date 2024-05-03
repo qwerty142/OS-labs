@@ -1,0 +1,6 @@
+#!/bin/bash
+
+d=$(date +"%F_R")
+
+mkdir ~/tests && echo "catalog test was successfully created" > ~/report.tmp && touch ~/tests/$d.tmp
+ping -c 1 "www.net_nikogo.ru" 2>> ~/report.tmp

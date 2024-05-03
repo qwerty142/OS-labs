@@ -1,0 +1,38 @@
+#!/bin/bash
+
+PID=""
+while true
+do
+    PID=$(pgrep -f task6_proc.sh)
+
+    if [[ -n $PID ]]; then
+        echo "Get proc with pid $PID"
+        break
+    fi
+
+    sleep 1
+done
+
+while true
+do
+    read -r line
+
+    case $line in
+        "+")
+            echo "Send USR1 signal"
+            kill -USR1 "$PID"
+            ;;
+        "*")
+            echo "Send USR2 signal"
+            kill -USR2 "$PID"
+            ;;
+        TERM)
+            echo "Send SIGTERM signal"
+            kill -SIGTERM "$PID"
+            exit 0
+            ;;
+        *)
+            :
+            ;;
+    esac
+done

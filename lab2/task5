@@ -1,0 +1,36 @@
+#!/bin/bash
+
+prev_ppid=-1
+sum=0
+amount=0
+
+function calculateAvg() {
+	if [[ "$amount" -gt 0 ]]
+	then
+		avg=$(echo "scale=4; $sum / $amount" | bc)
+		echo "Avg_Run_Child_of_parrentId=$prev_ppid is $avg"
+	fi
+}
+
+input="taskAnswer4.txt"
+out="out2.txt"
+
+while read -r line
+do
+	ppid=$(echo "$line" | awk -F'[:=]' '{print $4}')
+	art=$(echo "$line" | awk -F'[:=]' '{print $6}')
+
+
+	if [[ "$ppid" != "prev_ppid" ]]
+	then
+		calculateAvg
+		prev_ppid="$ppid"
+		sum=0
+		amount=0
+	fi
+	sum=$(echo "scale=4; $sum + $art" | bc)
+	count=$((amount + 1))
+
+	echo $line
+done < $input > $out
+calculateAvg >> $out

@@ -1,0 +1,69 @@
+#!/bin/bash
+
+num1=0
+num2=0
+num3=0
+num4=0
+bulls=0
+cows=0
+guessed_numbers=0
+num_massive=()
+while true; do
+
+    guess="${num1}${num2}${num3}${num4}"
+    for ((i=0; i<=9; i++))
+    do
+        num1=$i
+        num2=$i
+        num3=$i
+        num4=$i
+        guess="${num1}${num2}${num3}${num4}"
+        echo $guess > /tmp/guess_pipe
+        response=$(cat /tmp/response_pipe)
+        if [[ $response =~ Быки:\ ([0-9]+),\ Коровы:\ ([0-9]+) ]]; then
+            bulls="${BASH_REMATCH[1]}"
+            cows="${BASH_REMATCH[2]}"
+            for ((j=1; j<=$bulls; j++))
+            do
+                num_massive+=($i)
+            done
+        else
+            echo "Вы угадали"
+            break
+        fi
+        guessed_numbers=$((guessed_numbers + bulls))
+        if [[ $guessed_numbers == 4 ]]; then
+            break
+        fi
+    done
+    for ((i=0; i<4; i++))
+do
+    if [[ num_massive[$i] -ne 0 ]]; then
+    for ((j=0; j<4; j++))
+    do
+        if [ $j -ne $i ]; then
+            for ((k=0; k<4; k++))
+            do
+                if [ $k -ne $i ] && [ $k -ne $j ]; then
+                    for ((l=0; l<4; l++))
+                    do
+                        if [ $l -ne $i ] && [ $l -ne $j ] && [ $l -ne $k ]; then
+                            guess="${num_massive[$i]}${num_massive[$j]}${num_massive[$k]}${num_massive[$l]}"
+                            echo $guess > /tmp/guess_pipe
+                            response=$(cat /tmp/response_pipe)
+                            echo "Попытка: $guess"
+                            echo $response
+                            if [ "$response" == "Поздравляю, вы угадали!" ]; then
+                                exit 0
+                            fi
+                        fi
+                    done
+                fi
+            done
+        fi
+    done
+    fi
+done
+
+done
+

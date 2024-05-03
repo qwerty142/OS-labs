@@ -1,0 +1,6 @@
+#!/bin/bash
+touch full.log
+path="/var/log/anaconda/X.log"
+grep "(WW)" $path | sed "s/(WW)/Warning:/g" > full.log
+grep "(II)" $path | sed "s/(II)/Information:/g" >> full.log
+cat full.log

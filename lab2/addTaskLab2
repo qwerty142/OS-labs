@@ -1,0 +1,14 @@
+#!/bin/bash
+
+addRes="res.txt"
+
+pids=$(ls /proc | grep "^[0-9]*$")
+
+for pid in $pids
+do
+	if [[ -f /proc/$pid/maps ]]
+	then
+		path=$(grep "/libc" /proc/$pid/maps | awk -F'[/]' '{print $4}')
+		echo "PID: $pid, LIBC: $path" >> res.txt
+	fi
+done

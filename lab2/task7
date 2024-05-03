@@ -1,0 +1,53 @@
+#!/bin/bash
+
+start=$(date +%s)
+interval=5
+
+function readByte() {
+	grep -s "read_bytes" "/proc/$1/io" | awk '{print $2}'
+}
+
+function parse() {
+	for pid in $(ls /proc | grep -E '^[0-9]+$')
+	do
+		read_bytes=$(readByte $pid)
+		echo "$pid $read_bytes"
+	done
+}
+
+temp=$(mktemp)
+parse > "$temp"
+
+while true
+do
+	cur_t=$(date +%s)
+	diff=$((cur_t - start))
+
+	if [[ $diff -ge $interval ]]
+	then
+		break
+	fi
+
+	sleep 1
+done
+parse >> "$temp"
+temp2=$(mktemp)
+sort -k1 -n $temp | awk 'NF > 1' > $temp2
+
+prev_pid=-1
+prev_byte=-1
+while read line
+do
+	pid=$(echo $line | awk '{print $1}')
+	byte=$(echo $line | awk '{print $2}')
+	
+	if [[ $prev_pid != $pid ]]
+	then
+		prev_pid=$pid
+		prev_byte=$byte
+	else
+		diff=$(echo "scale=2; $byte - $prev_byte" | bc)
+	fi
+done < $temp2 > taskAns7.txt
+rm $temp
+rm $temp2

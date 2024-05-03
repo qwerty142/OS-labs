@@ -1,0 +1,16 @@
+#!/bin/bash
+
+script="task4_do.sh"
+
+pid1=$(pgrep -f $script | sed -n 1p)
+pid2=$(pgrep -f $script | sed -n 2p)
+pid3=$(pgrep -f $script | sed -n 3p)
+
+if [[ -z $pid1 || -z $pid2 || -z $pid3 ]]; then
+    echo "3 процесса не найдено $script"
+    exit 1
+fi
+
+nice -n 10 renice -n 10 -p "$pid1"
+
+kill "$pid3"

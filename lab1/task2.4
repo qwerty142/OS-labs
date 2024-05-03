@@ -1,0 +1,10 @@
+#!/bin/bash
+if [[ $PWD == $HOME* ]]
+then
+echo $PWD
+exit 0
+else
+>&2 echo "Not in directory"
+exit 1
+fi
+

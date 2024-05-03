@@ -1,0 +1,45 @@
+#!/bin/bash
+
+num=1
+mode="run"
+
+u1() {
+    mode="+"
+}
+u2() {
+    mode="*"
+}
+terminate() {
+    mode="terminate"
+}
+
+trap 'u1' USR1
+trap 'u2' USR2
+trap 'terminate' SIGTERM
+
+while true
+do
+    case $mode in
+        "+")
+            num=$((num + 2))
+            echo "Result: $num"
+            ;;
+        "*")
+            num=$((num * 2))
+            echo "Result: $num"
+            ;;
+        "terminate")
+            echo "Stop by SIGTERM"
+            exit 0
+            ;;
+        "run")
+            echo "In proc..."
+            ;;
+        *)
+            echo "Incorrect mode"
+            exit 1
+            ;;
+    esac
+
+    sleep 1
+done

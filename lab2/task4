@@ -1,0 +1,20 @@
+#!/bin/bash
+temp=$(mktemp)
+
+for pid in $(ps -axo pid)
+do
+	file1="/proc/$pid/status"
+	file2="/proc/$pid/sched"
+	
+	ppid=$(grep -s "PPid" $file1 | awk '{print $2}')
+	runtime=$(grep -s "sum_exec_runtime" $file2 | awk '{print $3}')
+	switches=$(grep -s "nr_switches" $file2 | awk '{print $3}')
+	
+	if [ -n "$ppid" ] && [ -n "$runtime" ] && [ -n "$switches" ]
+	then
+	art=$(echo "scale=4; $runtime / $switches" | bc)
+	echo "ProcessId=$pid : Parent=$ppid : Avg_time=$art" >> "$temp"
+	fi
+done
+sort -t "=" -k3 -n "$temp" > taskAnswer4.txt
+rm "$temp"

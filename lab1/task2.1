@@ -1,0 +1,8 @@
+read n1 n2 n3
+if[[$n1 -ge $n2 && $n1 -ge $n3]]
+then echo "$n1 is the biggest"
+elif[[$n2 -ge $n1 && $n2 -ge $n3]]
+then echo "$n2 is the biggest"
+else
+echo "$n3 is the biggest"
+fi 

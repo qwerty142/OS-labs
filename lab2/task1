@@ -1,0 +1,2 @@
+#!/bin/bash
+ps a -u user --format pid,command | awk '{ print $1":"$2 }' > taskAnswer1.txt

@@ -1,0 +1,2 @@
+#!/bin/bash
+grep -r -h -E -o '\b[A-Za-z]+.[A-Za-z]+\b' /etc/* | tr '/n' ',' > emails.list

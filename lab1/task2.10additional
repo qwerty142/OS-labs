@@ -1,0 +1,2 @@
+#!/bin/bash
+man bash | awk 'BEGIN { FS="w{4,}" } { for (i=1; i<=NF; i++) { if (length($i) >= 4) words[$i]++ } } END { for (word in words) print word, words[word] }' | sort -nrk2 | head -n 3

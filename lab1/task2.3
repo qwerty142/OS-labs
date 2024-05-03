@@ -1,0 +1,21 @@
+#!/bin/bash
+n="Select option: "
+select opt in Nano Vi Links Exit
+do
+case $opt in
+"Nano")
+nano
+break;;
+"Vi")
+vi
+break;;
+"Links")
+links
+break;;
+"Exit")
+echo "end"
+break;;
+*)
+echo "No such option";;
+esac
+done

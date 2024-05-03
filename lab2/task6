@@ -1,0 +1,26 @@
+#!/bin/bash
+
+pr_pid=$(
+	ls -d /proc/* | grep -E -o "[0-9]+" |
+	while read pid
+	do
+		memory=$(
+			grep -s 'VmRSS' /proc/$pid/status | awk '{print $2}')
+		liba=-1
+		if [[ -f /proc/$pid/maps ]]
+		then
+		liba=$(grep "/libc" /proc/$pid/maps awk -F'[/]' '{print $4}')
+		fi
+		echo "$memory $pid $liba" >> taskRes.txt
+		
+	done |
+	sort -r -k1 -n | head --lines=1 | awk '{print $2}'
+)
+
+top_pid=$(
+	top -b -n 1 | sed 1,6d | awk '{print $1, $10}' | sort -r -k2 -n |
+	head --lines=1 | awk '{print $1}'
+)
+
+echo "From /proc found PID=$pr_pid"
+echo "From top found PID=$top_pid"

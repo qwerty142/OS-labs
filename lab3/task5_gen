@@ -1,0 +1,19 @@
+#!/bin/bash
+
+while true
+do
+    read -r line
+    echo "$line" > task5_p
+
+    if [[ "$line" == "QUIT" ]]
+    then
+        echo "Ending"
+        exit 0
+    fi
+
+    if [[ ! "$line" =~ [0-9]+ && "$line" != "+" && "$line" != "*" ]]
+    then
+        echo "Wrong input"
+        exit 1
+    fi
+done

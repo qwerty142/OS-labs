@@ -1,0 +1,13 @@
+#!/bin/bash
+b=""
+read n
+b="$b$n"
+while [["$n" != "q"]]
+do
+read n
+b="$b$n"
+if[["$n"=="q"]]
+then break
+fi
+done
+echo "$b"

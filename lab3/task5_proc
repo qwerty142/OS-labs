@@ -1,0 +1,53 @@
+#!/bin/bash
+
+mod="+"
+num=1
+
+(tail -f task5_p) |
+while true
+do
+    read -r line
+    case "$line" in
+        "+")
+            mod="+"
+            echo "Now add"
+            ;;
+        "*")
+            mod="*"
+            echo "Now mult"
+            ;;
+        [0-9]*)
+            case $mod in
+                "+")
+                    echo "Add $num and $line"
+                    num=$((num + line))
+                    echo "Result: $num"
+                    ;;
+                "*")
+                    echo "Mult $num and $line"
+                    num=$((num * line))
+                    echo "Result: $num"
+                    ;;
+            esac
+            ;;
+        QUIT)
+            echo "Stop by quit"
+            echo "Result: $num"
+            killall tail
+            exit 0
+            ;;
+        *)
+            echo "Stop by incorrect input"
+            killall tail
+            exit 1
+            ;;
+    esac
+done
+
+
+
+
+
+
+быки и коровы 2 скрипта 1 загадывает один угадывает 
+генерация 5знач число 
